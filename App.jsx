@@ -14,7 +14,7 @@ import { fetchInitialNotices } from "./noticeService";
 
 import { createNoticeCounter } from "./noticeCounter";
 import useNoticeFilter from "./useNoticeFilter";
-
+import { useNavigate } from "react-router-dom";
 const Dashboard = lazy(() =>
   import("./Dashboard")
 );
@@ -46,6 +46,7 @@ const AdminLogin = lazy(() =>
 const noticeCounter = createNoticeCounter();
 
 export default function App() {
+  const navigate = useNavigate()
   const [notices, setNotices] = useState([]);
 
   const [categories, setCategories] = useState([
@@ -127,6 +128,16 @@ export default function App() {
       ]);
     }
   };
+   const handleLogout = () => {
+    setIsAdmin(false);
+    setViewForm(false);
+
+    setSelectedCategory("All");
+    setSearchQuery("");
+    setArchiveFilter("");
+
+    navigate("/");
+  };
 
   const filteredNotices =
   useNoticeFilter(
@@ -181,14 +192,21 @@ export default function App() {
     </span>
   </div>
 
+  {isAdmin ? (
   <button
     className="admin-btn"
-    onClick={() => {
-      window.location.href = "/admin";
-    }}
+    onClick={handleLogout}
   >
-    Admin Login Access
+    Logout 
   </button>
+) : (
+  <button
+    className="admin-btn"
+    onClick={() => navigate("/admin")}
+  >
+    Admin Login
+  </button>
+)}
 </header>
 
                 <main className="main-container">
